@@ -2,8 +2,9 @@ name: Build and Push Docker Image to Docker Hub
 
 on:
   push:
-    branches:
-      - main  # หรือเปลี่ยนเป็น branch ที่ต้องการให้ trigger
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]  
 
 jobs:
   build:
