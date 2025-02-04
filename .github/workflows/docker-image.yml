@@ -24,8 +24,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/your-repo-name:${{ github.sha }} .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/react-git:${{ github.sha }} .
 
       - name: Push Docker image
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/react:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/react-git:${{ github.sha }}
