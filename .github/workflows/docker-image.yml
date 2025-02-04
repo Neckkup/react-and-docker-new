@@ -20,7 +20,7 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Check out the repository
+    - name: Build the Docker image
       uses: actions/checkout@v2
 
     
@@ -29,5 +29,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/react-docker-test:latest
-  
+        tags: ${{ secrets.DOCKER_USERNAME }}/react-docker-test:${{ github.sha }}
