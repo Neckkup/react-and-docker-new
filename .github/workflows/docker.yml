@@ -3,7 +3,7 @@ name: Deploy React to GitHub Pages
 on:
   push:
     branches:
-      - main  # เมื่อมีการ push ไปที่ branch main
+      - main  # เมื่อมีการ push ไปที่ branch maina
 
 jobs:
   build:
