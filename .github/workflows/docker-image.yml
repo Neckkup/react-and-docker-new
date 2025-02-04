@@ -13,18 +13,28 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2  # เช็คเอาท์โค้ดจาก repository
+      uses: actions/checkout@v3  # เช็คเอาท์โค้ดจาก repository
 
     - name: Log in to Docker Hub
-      uses: docker/login-action@v1
+      uses: docker/login-action@v2
       with:
-        password: ${{ secrets.DOCKER_PASSWORD }}
-        username: ${{ secrets.DOCKER_USERNAME }}
+        username: ${{ secrets.DOCKER_USERNAME }}  # ใช้ GitHub Secrets สำหรับ username
+        password: ${{ secrets.DOCKER_PASSWORD }}  # ใช้ GitHub Secrets สำหรับ password
     
-    - name: Build and build Docker image
+    - name: Build the Docker image
       uses: docker/build-push-action@v2
       with:
         context: .  # สร้าง Docker image จากไฟล์ใน current directory
         file: ./Dockerfile  # กำหนดไฟล์ Dockerfile
         push: true  # Push Docker image ไปที่ Docker Hub
         tags: ${{ secrets.DOCKER_USERNAME }}/react-testgit:${{ github.sha }}  # ระบุชื่อและ tag ของ Docker image
+
+    - name: Push to gh-pages
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add -A
+        git commit -m "Deploy to gh-pages"
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} gh-pages
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
