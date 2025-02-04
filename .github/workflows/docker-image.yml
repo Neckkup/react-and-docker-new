@@ -1,40 +1,31 @@
-name: Docker Image CI
+name: Build and Push Docker Image to Docker Hub
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches:
+      - main  # หรือเปลี่ยนเป็น branch ที่ต้องการให้ trigger
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3  # เช็คเอาท์โค้ดจาก repository
+      - name: Check out repository
+        uses: actions/checkout@v2
 
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}  # ใช้ GitHub Secrets สำหรับ username
-        password: ${{ secrets.DOCKER_PASSWORD }}  # ใช้ GitHub Secrets สำหรับ password
-    
-    - name: Build the Docker image
-      uses: docker/build-push-action@v2
-      with:
-        context: .  # สร้าง Docker image จากไฟล์ใน current directory
-        file: ./Dockerfile  # กำหนดไฟล์ Dockerfile
-        push: true  # Push Docker image ไปที่ Docker Hub
-        tags: ${{ secrets.DOCKER_USERNAME }}/react-testgit:${{ github.sha }}  # ระบุชื่อและ tag ของ Docker image
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-    - name: Push to gh-pages
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git add -A
-        git commit -m "Deploy to gh-pages"
-        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} gh-pages
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/your-repo-name:${{ github.sha }} .
+
+      - name: Push Docker image
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/react:${{ github.sha }}
