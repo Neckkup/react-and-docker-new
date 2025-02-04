@@ -20,4 +20,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/react-docker:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}ratchanon1/react-docker:${{ github.sha }}
